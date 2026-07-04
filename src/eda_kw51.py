@@ -146,11 +146,19 @@ def main():
     channel_stats.to_csv(os.path.join(TABLES_DIR, "channel_amplitude_stats.csv"), index=False)
     print("Saved channel_amplitude_stats.csv")
 
-    flat_channels = channel_stats.groupby("channel")["std"].mean()
-    flat_channels = flat_channels[flat_channels < flat_channels.quantile(0.05)]
-    if len(flat_channels) > 0:
-        print("\nWARNING: channels with unusually low variance (possible sensor issue):")
-        print(flat_channels)
+    flat_channels = channel_stats.groupby(["type", "channel"])["std"].mean()
+    for sensor_type in ["accel", "strain"]:
+        subset = flat_channels[sensor_type]
+        low = subset[subset < subset.quantile(0.05)]
+        if len(low) > 0:
+            print(f"\nWARNING: {sensor_type} channels with unusually low variance relative to other {sensor_type} channels:")
+            print(low)
+
+    completeness = channel_stats.groupby(["type", "channel"]).size()
+    incomplete = completeness[completeness < completeness.max()]
+    if len(incomplete) > 0:
+        print("\nWARNING: channels with missing values in some events (possible dropout period):")
+        print(incomplete)
 
     length_stats = plot_sequence_length_distribution(full)
     print("Sequence length stats:", length_stats)
