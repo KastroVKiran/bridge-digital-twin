@@ -21,3 +21,17 @@
   grVL/drVL/dnrVL/raVL ~7.3%, wsVL/wdVL ~10.1%
 - Displacement data (predat_d) present in 172/899 events (~19%); confirmed absent
   in earlier months (e.g. all of Oct 2018), added partway through the campaign
+
+- CRITICAL FINDING: diagonal-connection strain gauges (sgDI20ALB, sgDI20ALL, sgDI23ALB,
+  sgDI23ALL) are present ONLY from Nov 2018 to 7 May 2019 (345/899 events), entirely within
+  the pre-retrofit period. Zero coverage during or after retrofit (confirmed, not relabeled
+  elsewhere). Bridge-deck strain gauges (sgBD*) have full 899/899 coverage across all three
+  retrofit states. Research scope decision: primary fatigue analysis will use deck strain
+  (sgBD*) for full before/during/after comparison; diagonal-connection strain (sgDI*) will be
+  used as a supplementary pre-retrofit-only characterization at the specific location that
+  was later retrofitted, not as a before/after comparison.
+- aBD23Ay (accel) and sgBD1415A (strain) flagged as lowest-variance within their sensor type,
+  but both have near-complete coverage (886/899 and 899/899) and smooth, non-degenerate
+  distributions -- genuinely low-signal sensors, not faulty, no exclusion needed.
+- Six arch-mounted accelerometers (aAR0910/1516/2122, Ay/Cy) missing in 687/899 events (76%) --
+  installed partway through campaign, needs dating before use in any arch-vibration analysis.
