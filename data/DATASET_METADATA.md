@@ -35,3 +35,9 @@
   distributions -- genuinely low-signal sensors, not faulty, no exclusion needed.
 - Six arch-mounted accelerometers (aAR0910/1516/2122, Ay/Cy) missing in 687/899 events (76%) --
   installed partway through campaign, needs dating before use in any arch-vibration analysis.
+
+## Phase 5 Fatigue Physics Results
+- Deck strain cumulative damage (category 71, full campaign): 4.80e-07
+- Diagonal strain cumulative damage (category 71, pre-retrofit period only, 345 events): 2.53e-06
+- Diagonal per-event damage correctly zero for the 554 events without valid sensor data
+  (NaN arrays produce zero rainflow cycles by construction, not a bug)
