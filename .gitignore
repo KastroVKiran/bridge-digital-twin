@@ -1,0 +1,14 @@
+cat > .gitignore << 'EOF'
+# Data — not committed to version control; obtained separately per docs/02_README_Data_Collection.md
+data/raw/
+data/processed/
+
+# Python
+venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# OS/editor
+.DS_Store
+EOF
