@@ -2,7 +2,8 @@
 """
 Dataset loader for PINN strain reconstruction: loads sparse acceleration
 channels as input, deck strain channels as target, applies fixed-length
-windowing (truncate to 36000 samples per Phase 6 design decision).
+windowing (truncate to 36000 samples per Phase 6 design decision), and
+z-score normalizes both input and target using training-set-only statistics.
 """
 
 import glob
@@ -15,6 +16,7 @@ from torch.utils.data import Dataset
 
 PROCESSED_ROOT = "data/processed/kw51"
 WINDOW_LENGTH = 36000
+NORM_STATS_PATH = "data/processed/kw51/normalization_stats.npz"
 
 INPUT_ACCEL_CHANNELS = ["aBD11Az", "aBD17Ay", "aBD17Az", "aBD23Ay"]
 TARGET_STRAIN_CHANNELS = [
@@ -35,8 +37,7 @@ def filter_events_with_complete_channels(full: pd.DataFrame, required_channels: 
     Drop any event where one of the required channels has NaN data, using the
     Phase 4 channel_amplitude_stats.csv (std is NaN exactly when that channel's
     data was NaN for that event -- see Phase 4 findings). This is a proactive
-    safeguard against the exact failure mode found during Phase 6 baseline
-    testing: silently training on NaN-containing input channels.
+    safeguard against silently training on NaN-containing input channels.
     """
     stats_path = "results/tables/channel_amplitude_stats.csv"
     if not os.path.exists(stats_path):
@@ -63,7 +64,7 @@ def filter_events_with_complete_channels(full: pd.DataFrame, required_channels: 
 
 
 class KW51StrainReconstructionDataset(Dataset):
-    def __init__(self, split: str):
+    def __init__(self, split: str, normalize: bool = True):
         full = build_event_index()
         full = filter_events_with_complete_channels(
             full, INPUT_ACCEL_CHANNELS + TARGET_STRAIN_CHANNELS
@@ -80,6 +81,19 @@ class KW51StrainReconstructionDataset(Dataset):
 
         self.events = full[mask].reset_index(drop=True)
         self.split = split
+        self.normalize = normalize
+
+        if normalize:
+            if not os.path.exists(NORM_STATS_PATH):
+                raise FileNotFoundError(
+                    f"{NORM_STATS_PATH} not found. Run src/compute_normalization_stats.py first "
+                    "(it must be run before normalize=True can be used)."
+                )
+            stats = np.load(NORM_STATS_PATH)
+            self.accel_mean = stats["accel_mean"]
+            self.accel_std = stats["accel_std"]
+            self.strain_mean = stats["strain_mean"]
+            self.strain_std = stats["strain_std"]
 
     def __len__(self):
         return len(self.events)
@@ -96,8 +110,8 @@ class KW51StrainReconstructionDataset(Dataset):
         accel_idx = [accel_labels.index(c) for c in INPUT_ACCEL_CHANNELS]
         strain_idx = [strain_labels.index(c) for c in TARGET_STRAIN_CHANNELS]
 
-        accel = d["accel"][:WINDOW_LENGTH, accel_idx]
-        strain = d["strain"][:WINDOW_LENGTH, strain_idx]
+        accel = d["accel"][:WINDOW_LENGTH, accel_idx].astype(np.float32)
+        strain = d["strain"][:WINDOW_LENGTH, strain_idx].astype(np.float32)
 
         if accel.shape[0] < WINDOW_LENGTH:
             raise ValueError(
@@ -106,11 +120,21 @@ class KW51StrainReconstructionDataset(Dataset):
                 "investigate this specific event before proceeding."
             )
 
+        if self.normalize:
+            accel = (accel - self.accel_mean) / self.accel_std
+            strain = (strain - self.strain_mean) / self.strain_std
+
         return (
             torch.tensor(accel, dtype=torch.float32),
             torch.tensor(strain, dtype=torch.float32),
             row["event_id"],
         )
+
+
+def denormalize_strain(strain_normalized: np.ndarray) -> np.ndarray:
+    """Convert model output (or normalized target) back to physical strain units."""
+    stats = np.load(NORM_STATS_PATH)
+    return strain_normalized * stats["strain_std"] + stats["strain_mean"]
 
 
 if __name__ == "__main__":
@@ -119,3 +143,5 @@ if __name__ == "__main__":
         print(f"{split}: {len(ds)} events")
         accel, strain, event_id = ds[0]
         print(f"  sample shapes: accel {accel.shape}, strain {strain.shape}, event_id {event_id}")
+        print(f"  accel range: [{accel.min():.3f}, {accel.max():.3f}] (should be roughly -3 to 3 if normalized correctly)")
+        print(f"  strain range: [{strain.min():.3f}, {strain.max():.3f}] (should be roughly -3 to 3 if normalized correctly)")

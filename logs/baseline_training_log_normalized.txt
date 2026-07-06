@@ -1,0 +1,37 @@
+Excluded 307/899 events missing one or more required channels (['aBD11Az', 'aBD17Ay', 'aBD17Az', 'aBD23Ay', 'sgBD1011A', 'sgBD1415A', 'sgBD1718A', 'sgBD1718C', 'sgBD2324AB', 'sgBD2324AT', 'sgBD2324C', 'sgBD2728A']).
+Excluded 307/899 events missing one or more required channels (['aBD11Az', 'aBD17Ay', 'aBD17Az', 'aBD23Ay', 'sgBD1011A', 'sgBD1415A', 'sgBD1718A', 'sgBD1718C', 'sgBD2324AB', 'sgBD2324AT', 'sgBD2324C', 'sgBD2728A']).
+Train batches: 167, Val batches: 26
+Epoch 1/20 | train_loss=8.079490e-01 | val_loss=6.473264e-01 | 787.3s
+  -> New best model saved (val_loss=6.473264e-01)
+Epoch 2/20 | train_loss=6.370851e-01 | val_loss=6.469718e-01 | 682.0s
+  -> New best model saved (val_loss=6.469718e-01)
+Epoch 3/20 | train_loss=6.313495e-01 | val_loss=6.336161e-01 | 648.6s
+  -> New best model saved (val_loss=6.336161e-01)
+Epoch 4/20 | train_loss=6.258417e-01 | val_loss=6.242369e-01 | 655.1s
+  -> New best model saved (val_loss=6.242369e-01)
+Epoch 5/20 | train_loss=5.994014e-01 | val_loss=5.463040e-01 | 665.9s
+  -> New best model saved (val_loss=5.463040e-01)
+Epoch 6/20 | train_loss=5.219393e-01 | val_loss=4.439631e-01 | 662.4s
+  -> New best model saved (val_loss=4.439631e-01)
+Epoch 7/20 | train_loss=4.977817e-01 | val_loss=4.157418e-01 | 679.3s
+  -> New best model saved (val_loss=4.157418e-01)
+Epoch 8/20 | train_loss=3.970009e-01 | val_loss=2.944676e-01 | 727.6s
+  -> New best model saved (val_loss=2.944676e-01)
+Epoch 9/20 | train_loss=3.311143e-01 | val_loss=2.907164e-01 | 670.7s
+  -> New best model saved (val_loss=2.907164e-01)
+Epoch 10/20 | train_loss=3.897236e-01 | val_loss=2.838902e-01 | 728.5s
+  -> New best model saved (val_loss=2.838902e-01)
+Epoch 11/20 | train_loss=3.396337e-01 | val_loss=2.581218e-01 | 764.7s
+  -> New best model saved (val_loss=2.581218e-01)
+Epoch 12/20 | train_loss=5.913655e-01 | val_loss=5.296134e-01 | 948.3s
+Epoch 13/20 | train_loss=5.127028e-01 | val_loss=4.450693e-01 | 826.9s
+Epoch 14/20 | train_loss=4.398413e-01 | val_loss=3.653301e-01 | 903.1s
+Epoch 15/20 | train_loss=5.116003e-01 | val_loss=5.055224e-01 | 1044.3s
+Epoch 16/20 | train_loss=3.834909e-01 | val_loss=3.024242e-01 | 740.1s
+Epoch 17/20 | train_loss=3.626022e-01 | val_loss=2.976898e-01 | 1141.8s
+Epoch 18/20 | train_loss=2.970470e-01 | val_loss=2.615271e-01 | 911.4s
+Epoch 19/20 | train_loss=2.872601e-01 | val_loss=2.741496e-01 | 958.8s
+Epoch 20/20 | train_loss=3.011955e-01 | val_loss=2.808319e-01 | 1031.2s
+
+Training complete. Best val_loss: 2.581218e-01
+Best model checkpoint: checkpoints/baseline/best_model.pt
